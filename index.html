@@ -3,10 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <title>Galaxy Background</title>
-    <!-- Import Three.js -->
     <script src="https://unpkg.com/three@0.152.0/build/three.min.js"></script>
     <style>
-      /* On supprime les marges et le padding, et on définit un fond noir */
       body,
       html {
         margin: 0;
@@ -14,87 +12,107 @@
         background: #000;
         overflow: hidden;
       }
-      /* Le canvas occupe tout l'écran */
       canvas {
         display: block;
       }
     </style>
   </head>
   <body>
-    <!-- Le canvas qui servira pour le rendu Three.js -->
     <canvas id="threeCanvas"></canvas>
     <script>
-      // Récupération du canvas dans lequel on va dessiner la scène
       const canvas = document.getElementById("threeCanvas");
-
-      // Création du renderer (moteur de rendu WebGL)
       const renderer = new THREE.WebGLRenderer({ antialias: true });
       renderer.setSize(window.innerWidth, window.innerHeight);
-      // On insère le renderer dans le DOM en utilisant le canvas existant
       canvas.parentNode.insertBefore(renderer.domElement, canvas);
 
-      // Création d'une scène Three.js, qui contiendra les objets 3D
       const scene = new THREE.Scene();
 
-      // Création d'une caméra perspective
-      // La caméra a un champ de vision de 75 degrés,
-      // son aspect ratio est basé sur la taille de la fenêtre,
-      // et elle affiche les objets situés entre 1 et 1000 unités de distance.
+      // Dégradé de fond avec un shader pour éviter les erreurs de chargement
+      const gradientMaterial = new THREE.ShaderMaterial({
+        uniforms: {},
+        vertexShader: `
+          varying vec2 vUv;
+          void main() {
+            vUv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }
+        `,
+        fragmentShader: `
+          varying vec2 vUv;
+          void main() {
+            vec3 topColor = vec3(0.05, 0.0, 0.1); // Bleu nuit
+            vec3 bottomColor = vec3(0.0, 0.0, 0.0); // Noir profond
+            gl_FragColor = vec4(mix(bottomColor, topColor, vUv.y), 1.0);
+          }
+        `,
+        side: THREE.BackSide,
+      });
+
+      const skyGeometry = new THREE.SphereGeometry(1000, 32, 32);
+      const sky = new THREE.Mesh(skyGeometry, gradientMaterial);
+      scene.add(sky);
+
       const camera = new THREE.PerspectiveCamera(
         75,
         window.innerWidth / window.innerHeight,
         1,
-        1000
+        2000
       );
-      // On positionne la caméra à une distance de 1 unité sur l'axe Z
-      camera.position.z = 1;
+      camera.position.z = 600;
 
-      // Création d'un champ d'étoiles
-      // On va créer 10 000 étoiles en générant leurs positions aléatoirement dans l'espace.
+      // Création d'un champ d'étoiles avec variation de taille
       const starCount = 10000;
-      // Chaque étoile aura 3 coordonnées (x, y, z)
       const positions = new Float32Array(starCount * 3);
-      for (let i = 0; i < starCount * 3; i++) {
-        // Les positions sont réparties dans un volume de 2000 unités
+      const sizes = new Float32Array(starCount);
+
+      for (let i = 0; i < starCount * 3; i += 3) {
         positions[i] = (Math.random() - 0.5) * 2000;
+        positions[i + 1] = (Math.random() - 0.5) * 2000;
+        positions[i + 2] = (Math.random() - 0.5) * 2000;
+        sizes[i / 3] = Math.random() * 2.5 + 0.5;
       }
-      // On crée une BufferGeometry pour stocker les positions des étoiles
+
       const starGeometry = new THREE.BufferGeometry();
       starGeometry.setAttribute(
         "position",
         new THREE.BufferAttribute(positions, 3)
       );
+      starGeometry.setAttribute("size", new THREE.BufferAttribute(sizes, 1));
 
-      // Création d'un matériau pour les étoiles
-      // Ici, PointsMaterial est utilisé pour dessiner des points.
-      // On définit leur couleur blanche et leur taille à 1.2 unités.
       const starMaterial = new THREE.PointsMaterial({
         color: 0xffffff,
-        size: 1.2,
+        size: 2,
+        transparent: true,
+        opacity: 0.9,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
       });
-      // Création d'un objet Points, qui affiche la géométrie avec le matériau défini
+
       const stars = new THREE.Points(starGeometry, starMaterial);
-      // On ajoute le système d'étoiles à la scène
       scene.add(stars);
 
-      // Fonction d'animation : on appelle cette fonction à chaque frame
       function animate() {
         requestAnimationFrame(animate);
-        // Légère rotation des étoiles pour simuler un mouvement de galaxie
         stars.rotation.x += 0.0002;
         stars.rotation.y += 0.0004;
-        // Rendu de la scène depuis la perspective de la caméra
+
+        // Scintillement des étoiles
+        const sizes = starGeometry.attributes.size.array;
+        for (let i = 0; i < sizes.length; i++) {
+          // Variation de la taille
+          sizes[i] += (Math.random() - 0.5) * 0.05;
+          // Empêche des tailles trop grandes/petites
+          sizes[i] = Math.max(0.5, Math.min(3, sizes[i]));
+        }
+        starGeometry.attributes.size.needsUpdate = true;
+
         renderer.render(scene, camera);
       }
-      // On démarre l'animation
       animate();
 
-      // Adaptation du renderer et de la caméra lors du redimensionnement de la fenêtre
       window.addEventListener("resize", () => {
-        const width = window.innerWidth;
-        const height = window.innerHeight;
-        renderer.setSize(width, height);
-        camera.aspect = width / height;
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
       });
     </script>
