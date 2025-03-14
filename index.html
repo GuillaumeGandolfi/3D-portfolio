@@ -66,7 +66,7 @@
       const stars = new THREE.Points(starGeometry, starMaterial);
       scene.add(stars);
 
-      // Création du point cliquable (étoile spéciale) agrandie
+      // Création du point cliquable (étoile spéciale)
       const pointGeometry = new THREE.SphereGeometry(20, 40, 40);
       const pointMaterial = new THREE.MeshBasicMaterial({ color: 0xffd700 });
       const clickablePoint = new THREE.Mesh(pointGeometry, pointMaterial);
@@ -82,7 +82,7 @@
 
       scene.add(clickablePoint);
 
-      // Détection du survol pour changer le curseur
+      // Détection du survol et du clic
       const raycaster = new THREE.Raycaster();
       const mouse = new THREE.Vector2();
 
@@ -95,11 +95,28 @@
 
         if (intersects.length > 0) {
           document.body.style.cursor = "pointer";
+          clickablePoint.material.color.set(0xff4500);
         } else {
           document.body.style.cursor = "default";
+          clickablePoint.material.color.set(0xffd700);
         }
       }
+
+      function onClick(event) {
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObject(clickablePoint);
+
+        if (intersects.length > 0) {
+          // Effet d’agrandissement temporaire au clic
+          clickablePoint.scale.setScalar(1.5);
+          setTimeout(() => {
+            clickablePoint.scale.setScalar(1);
+          }, 500);
+        }
+      }
+
       window.addEventListener("mousemove", onMouseMove);
+      window.addEventListener("click", onClick);
 
       function animate() {
         requestAnimationFrame(animate);
@@ -111,7 +128,7 @@
         clickablePoint.position.x = Math.cos(angle) * orbitRadius;
         clickablePoint.position.y = Math.sin(angle) * orbitRadius;
 
-        // Effet de pulsation légère sur le point cliquable
+        // Effet de pulsation légère
         clickablePoint.scale.setScalar(1 + 0.1 * Math.sin(Date.now() * 0.005));
 
         renderer.render(scene, camera);
