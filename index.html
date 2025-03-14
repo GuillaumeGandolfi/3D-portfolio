@@ -2,7 +2,7 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
-    <title>Galaxy Portfolio</title>
+    <title>Fond Galaxie</title>
     <script src="https://unpkg.com/three@0.152.0/build/three.min.js"></script>
     <style>
       body,
@@ -11,62 +11,13 @@
         padding: 0;
         background: #000;
         overflow: hidden;
-        font-family: Arial, sans-serif;
       }
       canvas {
         display: block;
       }
-      .button-container {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 10;
-        text-align: center;
-      }
-      button {
-        padding: 12px 25px;
-        font-size: 18px;
-        border: 2px solid white;
-        background: transparent;
-        color: white;
-        cursor: pointer;
-        transition: 0.3s;
-        outline: none;
-        font-weight: bold;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-      }
-      button:hover {
-        border-color: #00bfff;
-        color: #00bfff;
-      }
-      #portfolio {
-        display: none;
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: black;
-        color: white;
-        text-align: center;
-        padding-top: 20%;
-        font-size: 2em;
-        opacity: 0;
-        transition: opacity 0.8s ease-in-out;
-      }
     </style>
   </head>
   <body>
-    <!-- Bouton modernisé -->
-    <div class="button-container">
-      <button id="startJourney">Voir mon portfolio galactique</button>
-    </div>
-
-    <!-- Portfolio Galactique -->
-    <div id="portfolio">Portfolio Galactique</div>
-
     <script>
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(
@@ -81,12 +32,10 @@
       renderer.setSize(window.innerWidth, window.innerHeight);
       document.body.appendChild(renderer.domElement);
 
-      // Génération des étoiles
-      const starCount = 8000;
-      const positions = new Float32Array(starCount * 3);
-      for (let i = 0; i < starCount * 3; i++) {
-        positions[i] = (Math.random() - 0.5) * 2000;
-      }
+      let starCount = 8000;
+      let positions = new Float32Array(starCount * 3);
+      generateStars();
+
       const starGeometry = new THREE.BufferGeometry();
       starGeometry.setAttribute(
         "position",
@@ -101,47 +50,20 @@
       const stars = new THREE.Points(starGeometry, starMaterial);
       scene.add(stars);
 
-      let isHyperJumping = false;
-      let speed = 1;
-      let animationFrame;
-
       function animate() {
-        animationFrame = requestAnimationFrame(animate);
-
-        if (isHyperJumping) {
-          speed += 0.5;
-          camera.position.z -= speed;
-
-          if (camera.position.z < -1000) {
-            isHyperJumping = false;
-            cancelAnimationFrame(animationFrame);
-            scene.remove(stars);
-            showPortfolio();
-          }
-        }
-
+        requestAnimationFrame(animate);
         stars.rotation.y += 0.0005;
         renderer.render(scene, camera);
       }
       animate();
 
-      function startHyperJump() {
-        document.querySelector(".button-container").style.display = "none";
-        isHyperJumping = true;
+      function generateStars() {
+        for (let i = 0; i < starCount * 3; i += 3) {
+          positions[i] = (Math.random() - 0.5) * 2000;
+          positions[i + 1] = (Math.random() - 0.5) * 2000;
+          positions[i + 2] = (Math.random() - 0.5) * 2000;
+        }
       }
-
-      function showPortfolio() {
-        const portfolio = document.getElementById("portfolio");
-        portfolio.style.display = "block";
-        setTimeout(() => {
-          // Apparition fluide immédiate
-          portfolio.style.opacity = 1;
-        }, 50);
-      }
-
-      document
-        .getElementById("startJourney")
-        .addEventListener("click", startHyperJump);
 
       window.addEventListener("resize", () => {
         renderer.setSize(window.innerWidth, window.innerHeight);
