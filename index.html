@@ -2,7 +2,7 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
-    <title>Fond Galaxie Amélioré</title>
+    <title>Portfolio - Guillaume</title>
     <script type="importmap">
       {
         "imports": {
@@ -24,7 +24,7 @@
     <script type="module">
       import * as THREE from "three";
 
-      // Initialisation de la scène, caméra et renderer
+      // Initialisation de la scène
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(
         75,
@@ -41,19 +41,12 @@
       // Génération des étoiles
       const starCount = 8000;
       const positions = new Float32Array(starCount * 3);
-      const colors = new Float32Array(starCount * 3);
 
       function generateStars() {
         for (let i = 0; i < starCount * 3; i += 3) {
           positions[i] = (Math.random() - 0.5) * 2000;
           positions[i + 1] = (Math.random() - 0.5) * 2000;
           positions[i + 2] = (Math.random() - 0.5) * 2000;
-
-          // Ajout d'une couleur aléatoire pour chaque étoile
-          const color = Math.random();
-          colors[i] = color;
-          colors[i + 1] = color * 0.8 + 0.2;
-          colors[i + 2] = 1;
         }
       }
       generateStars();
@@ -63,26 +56,63 @@
         "position",
         new THREE.BufferAttribute(positions, 3)
       );
-      starGeometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
 
       const starMaterial = new THREE.PointsMaterial({
-        vertexColors: true,
+        color: 0xffffff,
         size: 2,
-        // Effet de profondeur
         sizeAttenuation: true,
       });
 
       const stars = new THREE.Points(starGeometry, starMaterial);
       scene.add(stars);
 
-      // Animation (sans interaction avec la souris)
+      // Création du point cliquable (étoile spéciale) agrandie
+      const pointGeometry = new THREE.SphereGeometry(20, 40, 40);
+      const pointMaterial = new THREE.MeshBasicMaterial({ color: 0xffd700 });
+      const clickablePoint = new THREE.Mesh(pointGeometry, pointMaterial);
+
+      // Position initiale autour du centre
+      const orbitRadius = 400;
+      let angle = Math.random() * Math.PI * 2;
+      clickablePoint.position.set(
+        Math.cos(angle) * orbitRadius,
+        Math.sin(angle) * orbitRadius,
+        -500
+      );
+
+      scene.add(clickablePoint);
+
+      // Détection du survol pour changer le curseur
+      const raycaster = new THREE.Raycaster();
+      const mouse = new THREE.Vector2();
+
+      function onMouseMove(event) {
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObject(clickablePoint);
+
+        if (intersects.length > 0) {
+          document.body.style.cursor = "pointer";
+        } else {
+          document.body.style.cursor = "default";
+        }
+      }
+      window.addEventListener("mousemove", onMouseMove);
+
       function animate() {
         requestAnimationFrame(animate);
         stars.rotation.y += 0.0005;
         stars.rotation.x += 0.0003;
 
-        // Effet de scintillement en ajustant légèrement la taille des étoiles
-        starMaterial.size = 1.5 + Math.sin(Date.now() * 0.0005) * 0.5;
+        // Faire tourner le point avec les étoiles
+        angle += 0.0008;
+        clickablePoint.position.x = Math.cos(angle) * orbitRadius;
+        clickablePoint.position.y = Math.sin(angle) * orbitRadius;
+
+        // Effet de pulsation légère sur le point cliquable
+        clickablePoint.scale.setScalar(1 + 0.1 * Math.sin(Date.now() * 0.005));
 
         renderer.render(scene, camera);
       }
