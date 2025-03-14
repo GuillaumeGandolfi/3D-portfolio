@@ -2,8 +2,14 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
-    <title>Fond Galaxie</title>
-    <script src="https://unpkg.com/three@0.152.0/build/three.min.js"></script>
+    <title>Fond Galaxie Amélioré</title>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.152.0/build/three.module.js"
+        }
+      }
+    </script>
     <style>
       body,
       html {
@@ -12,13 +18,13 @@
         background: #000;
         overflow: hidden;
       }
-      canvas {
-        display: block;
-      }
     </style>
   </head>
   <body>
-    <script>
+    <script type="module">
+      import * as THREE from "three";
+
+      // Initialisation de la scène, caméra et renderer
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(
         75,
@@ -32,8 +38,24 @@
       renderer.setSize(window.innerWidth, window.innerHeight);
       document.body.appendChild(renderer.domElement);
 
-      let starCount = 8000;
-      let positions = new Float32Array(starCount * 3);
+      // Génération des étoiles
+      const starCount = 8000;
+      const positions = new Float32Array(starCount * 3);
+      const colors = new Float32Array(starCount * 3);
+
+      function generateStars() {
+        for (let i = 0; i < starCount * 3; i += 3) {
+          positions[i] = (Math.random() - 0.5) * 2000;
+          positions[i + 1] = (Math.random() - 0.5) * 2000;
+          positions[i + 2] = (Math.random() - 0.5) * 2000;
+
+          // Ajout d'une couleur aléatoire pour chaque étoile
+          const color = Math.random();
+          colors[i] = color;
+          colors[i + 1] = color * 0.8 + 0.2;
+          colors[i + 2] = 1;
+        }
+      }
       generateStars();
 
       const starGeometry = new THREE.BufferGeometry();
@@ -41,30 +63,32 @@
         "position",
         new THREE.BufferAttribute(positions, 3)
       );
+      starGeometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
 
       const starMaterial = new THREE.PointsMaterial({
-        color: 0xffffff,
-        size: 1.5,
+        vertexColors: true,
+        size: 2,
+        // Effet de profondeur
+        sizeAttenuation: true,
       });
 
       const stars = new THREE.Points(starGeometry, starMaterial);
       scene.add(stars);
 
+      // Animation (sans interaction avec la souris)
       function animate() {
         requestAnimationFrame(animate);
         stars.rotation.y += 0.0005;
+        stars.rotation.x += 0.0003;
+
+        // Effet de scintillement en ajustant légèrement la taille des étoiles
+        starMaterial.size = 1.5 + Math.sin(Date.now() * 0.0005) * 0.5;
+
         renderer.render(scene, camera);
       }
       animate();
 
-      function generateStars() {
-        for (let i = 0; i < starCount * 3; i += 3) {
-          positions[i] = (Math.random() - 0.5) * 2000;
-          positions[i + 1] = (Math.random() - 0.5) * 2000;
-          positions[i + 2] = (Math.random() - 0.5) * 2000;
-        }
-      }
-
+      // Gestion du redimensionnement
       window.addEventListener("resize", () => {
         renderer.setSize(window.innerWidth, window.innerHeight);
         camera.aspect = window.innerWidth / window.innerHeight;
