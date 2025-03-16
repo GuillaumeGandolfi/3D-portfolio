@@ -17,6 +17,94 @@
         padding: 0;
         background: #000;
         overflow: hidden;
+        font-family: "Courier New", monospace;
+      }
+
+      /* Style du terminal */
+      .terminal {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.9);
+        width: 600px;
+        height: 250px;
+        padding: 15px;
+        color: #0f0;
+        border: 2px solid #0f0;
+        box-shadow: 0 0 15px #0f0;
+        text-shadow: 0 0 5px #0f0;
+        background: rgba(0, 0, 0, 0.7);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .terminal-content {
+        flex-grow: 1;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        white-space: pre-wrap;
+      }
+
+      .terminal p {
+        margin: 0;
+        font-size: 16px;
+      }
+
+      /* Curseur clignotant */
+      .cursor {
+        display: inline-block;
+        width: 8px;
+        height: 16px;
+        background: #0f0;
+        margin-left: 3px;
+        animation: blink 0.6s infinite;
+      }
+
+      @keyframes blink {
+        50% {
+          opacity: 0;
+        }
+      }
+
+      .terminal-content {
+        overflow-y: hidden; /* Désactive le scroll automatique */
+      }
+
+      .terminal:hover .terminal-content {
+        overflow-y: auto; /* Active le scroll seulement quand l'utilisateur passe la souris */
+      }
+
+      .terminal-content::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      .terminal-content::-webkit-scrollbar-track {
+        background: #000; /* Fond noir pour éviter le clignotement */
+      }
+
+      .terminal-content::-webkit-scrollbar-thumb {
+        background: #0f0;
+        border-radius: 5px;
+        box-shadow: 0 0 5px #0f0;
+      }
+
+      /* Désactiver totalement la barre de scroll et son contour */
+      .terminal-content {
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* Internet Explorer/Edge */
+        overflow-y: scroll;
+      }
+
+      .terminal-content::-webkit-scrollbar {
+        width: 0px; /* Supprime la largeur de la scrollbar */
+        display: none; /* Empêche tout affichage */
       }
     </style>
   </head>
@@ -102,16 +190,15 @@
         }
       }
 
+      let terminalExists = false;
+
       function onClick(event) {
         raycaster.setFromCamera(mouse, camera);
         const intersects = raycaster.intersectObject(clickablePoint);
 
-        if (intersects.length > 0) {
-          // Effet d’agrandissement temporaire au clic
-          clickablePoint.scale.setScalar(1.5);
-          setTimeout(() => {
-            clickablePoint.scale.setScalar(1);
-          }, 500);
+        if (intersects.length > 0 && !terminalExists) {
+          terminalExists = true;
+          showTerminal();
         }
       }
 
@@ -123,24 +210,92 @@
         stars.rotation.y += 0.0005;
         stars.rotation.x += 0.0003;
 
-        // Faire tourner le point avec les étoiles
         angle += 0.0008;
         clickablePoint.position.x = Math.cos(angle) * orbitRadius;
         clickablePoint.position.y = Math.sin(angle) * orbitRadius;
-
-        // Effet de pulsation légère
-        clickablePoint.scale.setScalar(1 + 0.1 * Math.sin(Date.now() * 0.005));
 
         renderer.render(scene, camera);
       }
       animate();
 
-      // Gestion du redimensionnement
       window.addEventListener("resize", () => {
         renderer.setSize(window.innerWidth, window.innerHeight);
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
       });
+
+      function showTerminal() {
+        let terminal = document.createElement("div");
+        terminal.classList.add("terminal");
+
+        let terminalContent = document.createElement("div");
+        terminalContent.classList.add("terminal-content");
+
+        let terminalText = document.createElement("p");
+        terminalContent.appendChild(terminalText);
+
+        let cursor = document.createElement("span");
+        cursor.classList.add("cursor");
+        terminalText.appendChild(cursor);
+
+        terminal.appendChild(terminalContent);
+        document.body.appendChild(terminal);
+
+        setTimeout(() => {
+          terminal.style.visibility = "visible";
+          terminal.style.opacity = "1";
+          terminal.style.transform = "translate(-50%, -50%) scale(1)";
+        }, 200);
+
+        let text = `DÉMARRAGE DU SYSTÈME... ✅
+CHARGEMENT DES FICHIERS... ✅
+CONNEXION AU SERVEUR PRINCIPAL... ✅
+
+IDENTIFICATION DE L'UTILISATEUR
+> Nom : Guillaume
+> Rôle : Développeur Web
+> Spécialité : Sites performants et modernes ⚡
+
+ANALYSE DES DONNÉES EN COURS...
+
+HISTORIQUE RETROUVÉ :
+Guillaume a d'abord exploré les profondeurs de la biologie marine 🌊, cherchant à comprendre les écosystèmes aquatiques.  
+C'est en découvrant la bioinformatique qu'il s'est confronté à la programmation, analysant des données biologiques à grande échelle.  
+
+MISE À JOUR DU SYSTÈME EN COURS...
+
+L'informatique est devenue bien plus qu'un outil : c'était un univers à explorer.  
+Il s'est spécialisé dans le développement web, créant des sites modernes et rapides.  
+
+COMPÉTENCES DÉTECTÉES :
+- Sites vitrines ultra-performants avec Astro
+- Développement frontend avec React & Next.js
+- Gestion de bases de données et backend
+
+FINALISATION DES PARAMÈTRES...
+
+Aujourd’hui, Guillaume conçoit des expériences web optimisées et rapides, alliant design, performance et accessibilité.  
+Toujours en quête de nouveaux défis, il explore sans cesse les possibilités du web moderne.
+
+>>> SYSTÈME OPÉRATIONNEL. ACCÈS AUTORISÉ.
+`;
+
+        let index = 0;
+        let speed = 0.1; // Ultra rapide
+        let chunkSize = 2;
+
+        function typeWriter() {
+          if (index < text.length) {
+            terminalText.textContent += text.slice(index, index + chunkSize);
+            index += chunkSize;
+            terminalContent.scrollTop = terminalContent.scrollHeight;
+            setTimeout(typeWriter, speed);
+            terminalText.appendChild(cursor);
+          }
+        }
+
+        setTimeout(typeWriter, 100);
+      }
     </script>
   </body>
 </html>
