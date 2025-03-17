@@ -163,13 +163,13 @@ IDENTIFICATION DE L'UTILISATEUR
 ANALYSE DES DONNÉES EN COURS...
 
 HISTORIQUE RETROUVÉ :
-Guillaume a d'abord exploré les profondeurs de la biologie marine 🌊, cherchant à comprendre les écosystèmes aquatiques.  
-C'est en découvrant la bioinformatique qu'il s'est confronté à la programmation, analysant des données biologiques à grande échelle.  
+Guillaume a d'abord exploré les profondeurs de la biologie marine 🌊, cherchant à comprendre les écosystèmes aquatiques.
+C'est en découvrant la bioinformatique qu'il s'est confronté à la programmation, analysant des données biologiques à grande échelle.
 
 MISE À JOUR DU SYSTÈME EN COURS...
 
-L'informatique est devenue bien plus qu'un outil : c'était un univers à explorer.  
-Il s'est spécialisé dans le développement web, créant des sites modernes et rapides.  
+L'informatique est devenue bien plus qu'un outil : c'était un univers à explorer.
+Il s'est spécialisé dans le développement web, créant des sites modernes et rapides.
 
 COMPÉTENCES DÉTECTÉES :
 - Sites vitrines ultra-performants avec Astro
@@ -178,189 +178,186 @@ COMPÉTENCES DÉTECTÉES :
 
 FINALISATION DES PARAMÈTRES...
 
-Aujourd’hui, Guillaume conçoit des expériences web optimisées et rapides, alliant design, performance et accessibilité.  
+Aujourd’hui, Guillaume conçoit des expériences web optimisées et rapides, alliant design, performance et accessibilité.
 Toujours en quête de nouveaux défis, il explore sans cesse les possibilités du web moderne.
 
->>> SYSTÈME OPÉRATIONNEL. ACCÈS AUTORISÉ.
-`;
+>>> SYSTÈME OPÉRATIONNEL. ACCÈS AUTORISÉ.`;
 
+        typeWriter(terminalText, text, () => {
+          addTerminalButton(terminalContent, terminal);
+        });
+      }
+
+      function typeWriter(element, text, callback) {
         let index = 0;
 
-        function typeWriter() {
+        function write() {
           if (index < text.length) {
-            let visibleText = text.slice(0, index);
-            terminalText.textContent = visibleText;
-            // Accélération de l'écriture
-            index += 5;
-            terminalContent.scrollTop = terminalContent.scrollHeight;
-            setTimeout(typeWriter, 1);
+            // Mise à jour du texte sans perdre la mise en forme
+            element.innerHTML = `${text.slice(
+              0,
+              index
+            )}<span class="cursor">|</span>`;
+
+            index += 5; // Écriture plus rapide
+
+            // Scroll automatique
+            element.parentElement.scrollTop =
+              element.parentElement.scrollHeight;
+
+            setTimeout(write, 1);
           } else {
-            terminalText.textContent = text;
+            // Suppression du curseur après la fin du texte
+            element.innerHTML = text;
 
-            let space = document.createElement("div");
-            space.style.height = "40px";
-            terminalContent.appendChild(space);
+            // Forcer un dernier scroll pour bien voir le bouton
+            setTimeout(() => {
+              element.parentElement.scrollTop =
+                element.parentElement.scrollHeight;
+            }, 50);
 
-            addTerminalButton();
+            callback(); // Affiche le bouton après l’écriture
           }
         }
 
-        function addTerminalButton() {
-          let button = document.createElement("button");
-          button.textContent = "🚀 Voir mon premier projet";
+        write();
+      }
 
-          // Style du bouton
-          button.style.padding = "12px 24px";
-          button.style.border = "2px solid #0f0";
+      function addTerminalButton(container, terminal) {
+        let button = document.createElement("button");
+        button.textContent = "🚀 Voir mon premier projet";
+
+        // Styles du bouton
+        button.style.padding = "12px 24px";
+        button.style.border = "2px solid #0f0";
+        button.style.background = "black";
+        button.style.color = "#0f0";
+        button.style.fontFamily = "Courier New";
+        button.style.fontSize = "16px";
+        button.style.cursor = "pointer";
+        button.style.transition =
+          "background 0.3s, transform 0.2s, opacity 0.5s";
+        button.style.boxShadow = "0 0 10px #0f0";
+        button.style.opacity = "0";
+        button.style.textAlign = "center";
+        button.style.width = "fit-content";
+
+        button.onmouseover = () => {
+          button.style.background = "#0f0";
+          button.style.color = "black";
+          button.style.transform = "scale(1.05)";
+        };
+
+        button.onmouseout = () => {
           button.style.background = "black";
           button.style.color = "#0f0";
-          button.style.fontFamily = "Courier New";
-          button.style.fontSize = "16px";
-          button.style.cursor = "pointer";
-          button.style.transition =
-            "background 0.3s, transform 0.2s, opacity 0.5s";
-          button.style.boxShadow = "0 0 10px #0f0";
-          button.style.opacity = "0";
-          button.style.textAlign = "center";
-          button.style.width = "fit-content";
+          button.style.transform = "scale(1)";
+        };
 
-          button.onmouseover = () => {
-            button.style.background = "#0f0";
-            button.style.color = "black";
-            button.style.transform = "scale(1.05)";
-          };
+        let buttonContainer = document.createElement("div");
+        buttonContainer.style.display = "flex";
+        buttonContainer.style.justifyContent = "center";
+        buttonContainer.style.marginTop = "40px";
+        buttonContainer.style.width = "100%";
+        buttonContainer.appendChild(button);
 
-          button.onmouseout = () => {
-            button.style.background = "black";
-            button.style.color = "#0f0";
-            button.style.transform = "scale(1)";
-          };
+        container.appendChild(buttonContainer);
 
-          let buttonContainer = document.createElement("div");
-          buttonContainer.style.display = "flex";
-          buttonContainer.style.justifyContent = "center";
-          buttonContainer.style.marginTop = "40px";
-          buttonContainer.style.width = "100%";
-          buttonContainer.appendChild(button);
+        setTimeout(() => {
+          button.style.opacity = "1";
+        }, 100);
 
-          terminalContent.appendChild(buttonContainer);
-
-          terminalContent.scrollTop = terminalContent.scrollHeight;
-
-          // Apparition progressive du bouton
+        button.onclick = () => {
+          terminal.style.opacity = "0";
           setTimeout(() => {
-            button.style.opacity = "1";
-          }, 100);
-
-          button.onclick = () => {
-            terminal.style.opacity = "0";
-            setTimeout(() => {
-              terminal.remove();
-              transitionToFirstProject();
-            }, 500);
-          };
-        }
-
-        function transitionToFirstProject() {
-          let targetPosition = { x: 0, y: 0, z: 300 };
-          let duration = 3000;
-
-          let startTime = performance.now();
-          let initialPosition = {
-            x: camera.position.x,
-            y: camera.position.y,
-            z: camera.position.z,
-          };
-
-          function easeOutQuad(t) {
-            return t * (2 - t);
-          }
-
-          function animateCamera(time) {
-            let elapsed = time - startTime;
-            let t = Math.min(elapsed / duration, 1);
-            // Ramentissement progressif
-            let easedT = easeOutQuad(t);
-
-            // Animation de la caméra vers le projet
-            camera.position.x =
-              initialPosition.x +
-              (targetPosition.x - initialPosition.x) * easedT;
-            camera.position.y =
-              initialPosition.y +
-              (targetPosition.y - initialPosition.y) * easedT;
-            camera.position.z =
-              initialPosition.z +
-              (targetPosition.z - initialPosition.z) * easedT;
-
-            if (t < 1) {
-              requestAnimationFrame(animateCamera);
-            } else {
-              showFirstProjectInfo();
-            }
-          }
-
-          requestAnimationFrame(animateCamera);
-        }
-
-        function showFirstProjectInfo() {
-          let projectBox = document.createElement("div");
-          projectBox.id = "project-info";
-
-          projectBox.style.position = "absolute";
-          projectBox.style.top = "50%";
-          projectBox.style.left = "50%";
-          projectBox.style.transform = "translate(-50%, -50%) scale(0.9)";
-          projectBox.style.padding = "20px";
-          projectBox.style.color = "#0f0";
-          projectBox.style.border = "2px solid rgba(15, 255, 15, 0.7)";
-          projectBox.style.boxShadow = "0 0 15px rgba(15, 255, 15, 0.5)";
-          projectBox.style.background = "rgba(0, 0, 0, 0.5)";
-          projectBox.style.backdropFilter = "blur(10px)";
-          projectBox.style.fontFamily = "Courier New";
-          projectBox.style.fontSize = "18px";
-          projectBox.style.textAlign = "center";
-          projectBox.style.opacity = "0";
-          projectBox.style.width = "600px";
-          projectBox.style.maxHeight = "80vh";
-          projectBox.style.overflowY = "auto";
-          projectBox.style.transition =
-            "opacity 1s ease-out, transform 0.5s ease-out";
-          projectBox.style.animation = "float 5s infinite ease-in-out";
-
-          // Barre de scroll personnalisée
-          projectBox.style.scrollbarWidth = "thin";
-          projectBox.style.scrollbarColor = "#0f0 rgba(0,0,0,0.5)";
-
-          projectBox.innerHTML = `
-    <h2 style="text-transform: uppercase; letter-spacing: 2px; color: #fff;">Analyse Bioinformatique</h2>
-    <p style="font-style: italic; color: #bbb;">Identification des variants du RYMV <b>(Rice Yellow Mottle Virus)</b> en Afrique.</p>
-    
-    <p><b style="color: #fff;">Objectif :</b> Automatiser l'analyse pour aider les techniciens.</p>
-    <p><b style="color: #fff;">Technologies :</b> Snakemake, Python, outils bioinfo</p>
-    <p><b style="color: #fff;">Serveur :</b> Infrastructure de calcul local</p>
-    <p><b style="color: #fff;">Résultat :</b> Identification automatique des variants.</p>
-    <p><b style="color: #fff;">Publication :</b> Co-auteur de l'article scientifique.</p>
-    
-    <br>
-    <img src="./assets/images/rvhaplo_screen.png" alt="Aperçu du projet" style="width: 90%; max-height: 300px; border: 2px solid #0f0; box-shadow: 0 0 10px #0f0; border-radius: 5px;">
-    <br><br>
-
-    <a href="https://github.com/GuillaumeGandolfi/Pipeline_RVHaplo" target="_blank" style="color: #0f0; text-decoration: none; font-weight: bold;">Voir sur GitHub</a>
-    <br><br>
-    <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0311555" target="_blank" style="color: #0f0; text-decoration: none; font-weight: bold;">Lire l'article</a>
-  `;
-
-          document.body.appendChild(projectBox);
-
-          // Déclencher l'animation d'apparition
-          setTimeout(() => {
-            projectBox.style.opacity = "1";
-            projectBox.style.transform = "translate(-50%, -50%) scale(1)";
+            terminal.remove();
+            transitionToFirstProject();
           }, 500);
+        };
+      }
+
+      function transitionToFirstProject() {
+        let targetPosition = { x: 0, y: 0, z: 300 };
+        let duration = 3000;
+
+        let startTime = performance.now();
+        let initialPosition = {
+          x: camera.position.x,
+          y: camera.position.y,
+          z: camera.position.z,
+        };
+
+        function easeOutQuad(t) {
+          return t * (2 - t);
         }
 
-        setTimeout(typeWriter, 100);
+        function animateCamera(time) {
+          let elapsed = time - startTime;
+          let t = Math.min(elapsed / duration, 1);
+          let easedT = easeOutQuad(t);
+
+          camera.position.x =
+            initialPosition.x + (targetPosition.x - initialPosition.x) * easedT;
+          camera.position.y =
+            initialPosition.y + (targetPosition.y - initialPosition.y) * easedT;
+          camera.position.z =
+            initialPosition.z + (targetPosition.z - initialPosition.z) * easedT;
+
+          if (t < 1) {
+            requestAnimationFrame(animateCamera);
+          } else {
+            showFirstProjectInfo();
+          }
+        }
+
+        requestAnimationFrame(animateCamera);
+      }
+
+      function showFirstProjectInfo() {
+        let projectBox = document.createElement("div");
+        projectBox.id = "project-info";
+
+        projectBox.style.position = "absolute";
+        projectBox.style.top = "50%";
+        projectBox.style.left = "50%";
+        projectBox.style.transform = "translate(-50%, -50%) scale(0.9)";
+        projectBox.style.padding = "20px";
+        projectBox.style.color = "#0f0";
+        projectBox.style.border = "2px solid rgba(15, 255, 15, 0.7)";
+        projectBox.style.boxShadow = "0 0 15px rgba(15, 255, 15, 0.5)";
+        projectBox.style.background = "rgba(0, 0, 0, 0.5)";
+        projectBox.style.fontFamily = "Courier New";
+        projectBox.style.fontSize = "18px";
+        projectBox.style.textAlign = "center";
+        projectBox.style.opacity = "0";
+        projectBox.style.width = "600px";
+        projectBox.style.transition =
+          "opacity 1s ease-out, transform 0.5s ease-out";
+
+        projectBox.innerHTML = `<h2 style="text-transform: uppercase; letter-spacing: 2px; color: #fff;">Analyse Bioinformatique</h2>
+          <p style="font-style: italic; color: #bbb;">Identification des variants du RYMV <b>(Rice Yellow Mottle Virus)</b> en Afrique.</p>
+
+          <p><b style="color: #fff;">Objectif :</b> Automatiser l'analyse pour aider les techniciens.</p>
+          <p><b style="color: #fff;">Technologies :</b> Snakemake, Python, outils bioinfo</p>
+          <p><b style="color: #fff;">Serveur :</b> Infrastructure de calcul local</p>
+          <p><b style="color: #fff;">Résultat :</b> Identification automatique des variants.</p>
+          <p><b style="color: #fff;">Publication :</b> Co-auteur de l'article scientifique.</p>
+
+          <br>
+          <img src="./assets/images/rvhaplo_screen.png" alt="Aperçu du projet" style="width: 90%; max-height: 300px; border: 2px solid #0f0; box-shadow: 0 0 10px #0f0; border-radius: 5px;">
+          <br><br>
+
+          <a href="https://github.com/GuillaumeGandolfi/Pipeline_RVHaplo" target="_blank" style="color: #0f0; text-decoration: none; font-weight: bold;">Voir sur GitHub</a>
+          <br><br>
+          <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0311555" target="_blank" style="color: #0f0; text-decoration: none; font-weight: bold;">Lire l'article</a>
+        ;`;
+
+        document.body.appendChild(projectBox);
+
+        setTimeout(() => {
+          projectBox.style.opacity = "1";
+          projectBox.style.transform = "translate(-50%, -50%) scale(1)";
+        }, 500);
       }
     </script>
   </body>
