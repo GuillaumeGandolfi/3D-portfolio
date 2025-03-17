@@ -1,3 +1,136 @@
-body {
+/* === GLOBAL === */
+body,
+html {
+  margin: 0;
+  padding: 0;
+  background: #000;
+  overflow: hidden;
   font-family: "Roboto", sans-serif;
+}
+
+/* === TERMINAL === */
+.terminal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  width: 600px;
+  height: 250px;
+  padding: 15px;
+  color: #0f0;
+  border: 2px solid #0f0;
+  box-shadow: 0 0 15px #0f0;
+  text-shadow: 0 0 5px #0f0;
+  background: rgba(0, 0, 0, 0.7);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.terminal-content {
+  flex-grow: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  white-space: pre-wrap;
+}
+
+.terminal p {
+  margin: 0;
+  font-size: 16px;
+}
+
+/* === CURSEUR CLIGNOTANT === */
+.cursor {
+  display: inline-block;
+  width: 8px;
+  height: 16px;
+  background: #0f0;
+  margin-left: 3px;
+  animation: blink 0.6s infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* === SCROLL-BAR TERMINAL === */
+.terminal-content {
+  overflow-y: hidden;
+}
+
+.terminal:hover .terminal-content {
+  overflow-y: auto;
+}
+
+.terminal-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.terminal-content::-webkit-scrollbar-track {
+  background: #000;
+}
+
+.terminal-content::-webkit-scrollbar-thumb {
+  background: #0f0;
+  border-radius: 5px;
+  box-shadow: 0 0 5px #0f0;
+}
+
+.terminal-content {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  overflow-y: scroll;
+}
+
+.terminal-content::-webkit-scrollbar {
+  width: 0px;
+  display: none;
+}
+
+/* === EFFET FLOTTANT === */
+@keyframes float {
+  0% {
+    transform: translate(-50%, -50%) translateY(0px);
+  }
+  50% {
+    transform: translate(-50%, -50%) translateY(10px);
+  }
+  100% {
+    transform: translate(-50%, -50%) translateY(0px);
+  }
+}
+
+/* === SCROLL-BAR PROJET INFO === */
+#project-info {
+  max-height: 80vh;
+  width: 600px;
+  backdrop-filter: blur(10px);
+  text-align: center;
+}
+
+#project-info::-webkit-scrollbar {
+  width: 8px;
+}
+
+#project-info::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+}
+
+#project-info::-webkit-scrollbar-thumb {
+  background: #0f0;
+  border-radius: 10px;
+  box-shadow: 0 0 5px #0f0;
+}
+
+#project-info::-webkit-scrollbar-thumb:hover {
+  background: #0f0;
 }
