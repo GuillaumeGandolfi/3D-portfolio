@@ -57,7 +57,6 @@
         font-size: 16px;
       }
 
-      /* Curseur clignotant */
       .cursor {
         display: inline-block;
         width: 8px;
@@ -74,11 +73,11 @@
       }
 
       .terminal-content {
-        overflow-y: hidden; /* Désactive le scroll automatique */
+        overflow-y: hidden;
       }
 
       .terminal:hover .terminal-content {
-        overflow-y: auto; /* Active le scroll seulement quand l'utilisateur passe la souris */
+        overflow-y: auto;
       }
 
       .terminal-content::-webkit-scrollbar {
@@ -86,7 +85,7 @@
       }
 
       .terminal-content::-webkit-scrollbar-track {
-        background: #000; /* Fond noir pour éviter le clignotement */
+        background: #000;
       }
 
       .terminal-content::-webkit-scrollbar-thumb {
@@ -95,16 +94,15 @@
         box-shadow: 0 0 5px #0f0;
       }
 
-      /* Désactiver totalement la barre de scroll et son contour */
       .terminal-content {
-        scrollbar-width: none; /* Firefox */
-        -ms-overflow-style: none; /* Internet Explorer/Edge */
+        scrollbar-width: none;
+        -ms-overflow-style: none;
         overflow-y: scroll;
       }
 
       .terminal-content::-webkit-scrollbar {
-        width: 0px; /* Supprime la largeur de la scrollbar */
-        display: none; /* Empêche tout affichage */
+        width: 0px;
+        display: none;
       }
     </style>
   </head>
@@ -281,17 +279,72 @@ Toujours en quête de nouveaux défis, il explore sans cesse les possibilités d
 `;
 
         let index = 0;
-        let speed = 0.1; // Ultra rapide
-        let chunkSize = 2;
 
         function typeWriter() {
           if (index < text.length) {
-            terminalText.textContent += text.slice(index, index + chunkSize);
-            index += chunkSize;
+            let visibleText = text.slice(0, index);
+            terminalText.textContent = visibleText;
+            // Accélération de l'écriture
+            index += 5;
             terminalContent.scrollTop = terminalContent.scrollHeight;
-            setTimeout(typeWriter, speed);
-            terminalText.appendChild(cursor);
+            setTimeout(typeWriter, 1);
+          } else {
+            terminalText.textContent = text;
+
+            let space = document.createElement("div");
+            space.style.height = "40px";
+            terminalContent.appendChild(space);
+
+            addTerminalButton();
           }
+        }
+
+        function addTerminalButton() {
+          let button = document.createElement("button");
+          button.textContent = "🚀 Voir mon premier projet";
+
+          // Style du bouton
+          button.style.padding = "12px 24px";
+          button.style.border = "2px solid #0f0";
+          button.style.background = "black";
+          button.style.color = "#0f0";
+          button.style.fontFamily = "Courier New";
+          button.style.fontSize = "16px";
+          button.style.cursor = "pointer";
+          button.style.transition =
+            "background 0.3s, transform 0.2s, opacity 0.5s";
+          button.style.boxShadow = "0 0 10px #0f0";
+          button.style.opacity = "0";
+          button.style.textAlign = "center";
+          button.style.width = "fit-content";
+
+          button.onmouseover = () => {
+            button.style.background = "#0f0";
+            button.style.color = "black";
+            button.style.transform = "scale(1.05)";
+          };
+
+          button.onmouseout = () => {
+            button.style.background = "black";
+            button.style.color = "#0f0";
+            button.style.transform = "scale(1)";
+          };
+
+          let buttonContainer = document.createElement("div");
+          buttonContainer.style.display = "flex";
+          buttonContainer.style.justifyContent = "center";
+          buttonContainer.style.marginTop = "40px";
+          buttonContainer.style.width = "100%";
+          buttonContainer.appendChild(button);
+
+          terminalContent.appendChild(buttonContainer);
+
+          terminalContent.scrollTop = terminalContent.scrollHeight;
+
+          // Apparition progressive du bouton
+          setTimeout(() => {
+            button.style.opacity = "1";
+          }, 100);
         }
 
         setTimeout(typeWriter, 100);
