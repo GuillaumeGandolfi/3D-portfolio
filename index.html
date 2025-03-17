@@ -345,6 +345,60 @@ Toujours en quête de nouveaux défis, il explore sans cesse les possibilités d
           setTimeout(() => {
             button.style.opacity = "1";
           }, 100);
+
+          button.onclick = () => {
+            terminal.style.opacity = "0";
+            setTimeout(() => {
+              terminal.remove();
+              transitionToFirstProject();
+            }, 500);
+          };
+        }
+
+        function transitionToFirstProject() {
+          let targetPosition = { x: 0, y: 0, z: 300 };
+          let duration = 3000;
+
+          let startTime = performance.now();
+          let initialPosition = {
+            x: camera.position.x,
+            y: camera.position.y,
+            z: camera.position.z,
+          };
+
+          function easeOutQuad(t) {
+            return t * (2 - t);
+          }
+
+          function animateCamera(time) {
+            let elapsed = time - startTime;
+            let t = Math.min(elapsed / duration, 1);
+            // Ramentissement progressif
+            let easedT = easeOutQuad(t);
+
+            // Animation de la caméra vers le projet
+            camera.position.x =
+              initialPosition.x +
+              (targetPosition.x - initialPosition.x) * easedT;
+            camera.position.y =
+              initialPosition.y +
+              (targetPosition.y - initialPosition.y) * easedT;
+            camera.position.z =
+              initialPosition.z +
+              (targetPosition.z - initialPosition.z) * easedT;
+
+            if (t < 1) {
+              requestAnimationFrame(animateCamera);
+            } else {
+              showFirstProjectInfo();
+            }
+          }
+
+          requestAnimationFrame(animateCamera);
+        }
+
+        function showFirstProjectInfo() {
+          console.log("📌 La caméra est arrivée sur le premier projet !");
         }
 
         setTimeout(typeWriter, 100);
