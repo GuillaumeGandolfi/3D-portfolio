@@ -191,32 +191,32 @@ Toujours en quête de nouveaux défis, il explore sans cesse les possibilités d
       function typeWriter(element, text, callback) {
         let index = 0;
 
+        // Détection si on est en local ou en ligne
+        let isDev = window.location.hostname === "localhost";
+        let typingSpeed = isDev ? 1 : 25; // Rapide en local, normal en prod
+
         function write() {
           if (index < text.length) {
-            // Mise à jour du texte sans perdre la mise en forme
             element.innerHTML = `${text.slice(
               0,
               index
             )}<span class="cursor">|</span>`;
 
-            index += 5; // Écriture plus rapide
+            index += 5;
 
-            // Scroll automatique
             element.parentElement.scrollTop =
               element.parentElement.scrollHeight;
 
-            setTimeout(write, 1);
+            setTimeout(write, typingSpeed);
           } else {
-            // Suppression du curseur après la fin du texte
             element.innerHTML = text;
 
-            // Forcer un dernier scroll pour bien voir le bouton
             setTimeout(() => {
               element.parentElement.scrollTop =
                 element.parentElement.scrollHeight;
             }, 50);
 
-            callback(); // Affiche le bouton après l’écriture
+            callback();
           }
         }
 
