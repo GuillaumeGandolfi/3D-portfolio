@@ -5,21 +5,9 @@ import {
   showFirstProjectInfo,
 } from "./terminal.js";
 
+import { scene, camera, renderer } from "./scene.js";
+
 import * as THREE from "three";
-
-// Initialisation de la scène
-const scene = new THREE.Scene();
-export const camera = new THREE.PerspectiveCamera(
-  75,
-  window.innerWidth / window.innerHeight,
-  0.1,
-  2000
-);
-camera.position.z = 500;
-
-const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
 
 // Génération des étoiles
 const starCount = 8000;
@@ -109,9 +97,3 @@ function animate() {
   renderer.render(scene, camera);
 }
 animate();
-
-window.addEventListener("resize", () => {
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-});
