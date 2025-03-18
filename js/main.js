@@ -1,3 +1,5 @@
+import { trackLabel } from "./core/interactions.js";
+
 import { showTerminal } from "./ui/terminal.js";
 import {
   transitionToFirstProject,
@@ -9,3 +11,5 @@ import { clickablePoint } from "./core/interactions.js";
 import { startAnimation } from "./core/loop.js";
 
 startAnimation();
+
+trackLabel(clickablePoint, renderer);

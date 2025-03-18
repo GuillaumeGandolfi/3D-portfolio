@@ -2,6 +2,8 @@ import * as THREE from "three";
 import { scene, camera } from "./scene.js";
 import { showTerminal } from "../ui/terminal.js";
 
+const planetLabel = document.getElementById("planet-label"); // Récupère le label HTML
+
 const pointGeometry = new THREE.SphereGeometry(20, 40, 40);
 const pointMaterial = new THREE.MeshBasicMaterial({ color: 0xffd700 });
 export const clickablePoint = new THREE.Mesh(pointGeometry, pointMaterial);
@@ -50,3 +52,25 @@ function onClick(event) {
 
 window.addEventListener("mousemove", onMouseMove);
 window.addEventListener("click", onClick);
+
+// Mettre à jour la position
+function updateLabelPosition() {
+  const vector = new THREE.Vector3();
+  clickablePoint.getWorldPosition(vector);
+
+  // Convertir la position 3D en coordonnées
+  vector.project(camera);
+
+  const x = (vector.x * 0.5 + 0.5) * window.innerWidth;
+  const y = (-vector.y * 0.5 + 0.5) * window.innerHeight;
+
+  // Appliquer les nouvelles coordonnées
+  planetLabel.style.left = `${x}px`;
+  planetLabel.style.top = `${y - 20}px`;
+}
+
+export function trackLabel() {
+  updateLabelPosition();
+  requestAnimationFrame(trackLabel);
+}
+trackLabel();
