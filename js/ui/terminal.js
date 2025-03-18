@@ -1,4 +1,4 @@
-import { camera } from "./scene.js";
+import { camera } from "../core/scene.js";
 
 export function showTerminal() {
   let terminal = document.createElement("div");

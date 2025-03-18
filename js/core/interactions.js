@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { scene, camera } from "./scene.js";
-import { showTerminal } from "./terminal.js";
+import { showTerminal } from "../ui/terminal.js";
 
 const pointGeometry = new THREE.SphereGeometry(20, 40, 40);
 const pointMaterial = new THREE.MeshBasicMaterial({ color: 0xffd700 });
