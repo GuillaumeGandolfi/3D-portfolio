@@ -8,6 +8,24 @@ html {
   font-family: "Roboto", sans-serif;
 }
 
+/* === Écran noir d'introduction === */
+#intro-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: black;
+  color: #0f0; /* Style terminal */
+  font-family: "Courier New", monospace;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  z-index: 9999;
+}
+
 /* === TERMINAL === */
 .terminal {
   position: absolute;

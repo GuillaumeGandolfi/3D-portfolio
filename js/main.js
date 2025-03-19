@@ -10,6 +10,10 @@ import { stars } from "./core/stars.js";
 import { clickablePoint } from "./core/interactions.js";
 import { startAnimation } from "./core/loop.js";
 
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("intro-screen").style.display = "flex";
+});
+
 startAnimation();
 
 trackLabel(clickablePoint, renderer);
