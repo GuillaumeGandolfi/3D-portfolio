@@ -1,4 +1,5 @@
 import { trackLabel } from "./core/interactions.js";
+import { createHUD } from "./ui/hud.js";
 
 import { showTerminal } from "./ui/terminal.js";
 import {
@@ -10,10 +11,9 @@ import { stars } from "./core/stars.js";
 import { clickablePoint } from "./core/interactions.js";
 import { startAnimation } from "./core/loop.js";
 
-document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("intro-screen").style.display = "flex";
-});
-
 startAnimation();
 
+createHUD();
+
+// Suivi de l'étiquette de la planète
 trackLabel(clickablePoint, renderer);

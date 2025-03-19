@@ -8,22 +8,43 @@ html {
   font-family: "Roboto", sans-serif;
 }
 
-/* === Écran noir d'introduction === */
-#intro-screen {
+/* === HUD === */
+#hud {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: black;
-  color: #0f0; /* Style terminal */
-  font-family: "Courier New", monospace;
-  font-size: 24px;
+  background: rgba(0, 0, 0, 0.8);
+  border: 2px solid rgba(0, 255, 0, 0.3);
+  box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
+  pointer-events: none;
+}
+
+#hud-text {
+  color: #0f0;
+  font-family: "Courier New", monospace;
+  font-size: 22px;
+  text-transform: uppercase;
   text-align: center;
-  z-index: 9999;
+  text-shadow: 0 0 8px rgba(0, 255, 0, 0.8);
+  animation: hud-glow 1.5s infinite alternate;
+}
+
+/* Effet d'illumination */
+@keyframes hud-glow {
+  0% {
+    opacity: 1;
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.6);
+  }
+  100% {
+    opacity: 0.8;
+    text-shadow: 0 0 15px rgba(0, 255, 0, 1);
+  }
 }
 
 /* === TERMINAL === */
