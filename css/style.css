@@ -171,12 +171,12 @@ html {
 
 #planet-label {
   position: absolute;
-  color: #0f0; /* Vert néon */
+  color: #0f0;
   font-family: "Courier New", monospace;
   font-size: 18px;
   font-weight: bold;
   text-transform: uppercase;
-  background: rgba(0, 255, 0, 0.1); /* Légèrement transparent */
+  background: rgba(0, 255, 0, 0.1);
   padding: 8px 16px;
   border-radius: 5px;
   border: 1px solid rgba(0, 255, 0, 0.4);
@@ -184,10 +184,8 @@ html {
   pointer-events: none;
   transform: translate(-50%, -100%);
 
-  /* Éclairage plus doux */
   text-shadow: 0 0 5px rgba(0, 255, 0, 0.6), 0 0 10px rgba(0, 255, 0, 0.4);
 
-  /* Effet de texture subtile */
   background: linear-gradient(
     to bottom,
     rgba(0, 255, 0, 0.12) 0%,
@@ -195,9 +193,6 @@ html {
     rgba(0, 255, 0, 0.12) 100%
   );
 
-  /* Réduction du flou pour une meilleure lisibilité */
   backdrop-filter: blur(0.5px);
-
-  /* Halo lumineux adouci */
   box-shadow: 0 0 8px rgba(0, 255, 0, 0.4);
 }
