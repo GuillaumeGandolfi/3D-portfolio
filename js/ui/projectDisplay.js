@@ -76,7 +76,7 @@ export function showFirstProjectInfo() {
     <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0311555" target="_blank" style="color: #0f0; text-decoration: none; font-weight: bold;">Lire l'article</a>
     
     <br><br>
-    <button id="next-project-btn">Projet suivant</button>
+    <button id="next-project-btn">Prochaine màj...</button>
   `;
 
   document.body.appendChild(projectBox);
