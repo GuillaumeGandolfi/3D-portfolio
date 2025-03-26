@@ -209,6 +209,7 @@ html {
 }
 
 #planet-label {
+  opacity: 0;
   position: absolute;
   color: #0f0;
   font-family: "Courier New", monospace;

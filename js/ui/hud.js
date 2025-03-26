@@ -12,23 +12,40 @@ export function createHUD() {
     10
   );
 
-  // Cadre néon
-  const frameGeometry = new THREE.BoxGeometry(
-    window.innerWidth - 40,
-    window.innerHeight - 40,
-    1
+  // Fond noir opaque pour le HUD
+  const planeGeometry = new THREE.PlaneGeometry(
+    window.innerWidth,
+    window.innerHeight
   );
-  const frameMaterial = new THREE.LineBasicMaterial({ color: 0x00ff00 });
-  const frameEdges = new THREE.EdgesGeometry(frameGeometry);
-  const neonFrame = new THREE.LineSegments(frameEdges, frameMaterial);
-  neonFrame.position.z = -5;
-  hudScene.add(neonFrame);
+  const planeMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
+  const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+  plane.position.z = -6;
+  hudScene.add(plane);
 
-  // Cercle au centre du hud
+  // Cadre néon
+  const frameGeometry = new THREE.PlaneGeometry(
+    window.innerWidth - 40,
+    window.innerHeight - 40
+  );
+  const frameMaterial = new THREE.MeshBasicMaterial({
+    color: 0x00ff00,
+    side: THREE.DoubleSide,
+    transparent: true,
+    opacity: 0.3,
+  });
+  const frame = new THREE.Mesh(frameGeometry, frameMaterial);
+  frame.position.z = -5;
+  hudScene.add(frame);
+
+  // Cercle au centre du HUD
   const circleGeometry = new THREE.CircleGeometry(50, 32);
-  const circleMaterial = new THREE.LineBasicMaterial({ color: 0x00ff00 });
-  const circleEdges = new THREE.EdgesGeometry(circleGeometry);
-  const circle = new THREE.LineSegments(circleEdges, circleMaterial);
+  const circleMaterial = new THREE.MeshBasicMaterial({
+    color: 0x00ff00,
+    side: THREE.DoubleSide,
+    transparent: true,
+    opacity: 0.3,
+  });
+  const circle = new THREE.Mesh(circleGeometry, circleMaterial);
   circle.position.set(0, 0, -4);
   hudScene.add(circle);
 
