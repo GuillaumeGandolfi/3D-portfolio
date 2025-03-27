@@ -27,27 +27,26 @@ html {
   color: #0f0;
   font-family: "Courier New", monospace;
   font-size: 16px;
-  padding: 40px 20px;
+  padding: 40px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   z-index: 100;
   overflow-y: auto;
-  text-shadow: 0 0 5px #0f0;
 }
 
 .intro-shape-container {
-  width: 140px;
-  height: 140px;
-  margin-bottom: 25px;
+  width: 120px;
+  height: 120px;
+  margin-bottom: 20px;
+  filter: drop-shadow(0 0 6px #0f0); /* effet holo */
 }
 
 #intro-text {
-  width: 90%;
-  max-width: 800px;
+  width: 800px;
   height: 300px;
-  line-height: 1.5;
+  line-height: 1.2;
   text-align: justify;
   overflow-y: auto;
   white-space: pre-wrap;
@@ -72,7 +71,6 @@ html {
   cursor: pointer;
   box-shadow: 0 0 10px #0f0, inset 0 0 5px #0f0;
   transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
-  pointer-events: auto;
 }
 
 .launch-button:hover {
