@@ -98,13 +98,20 @@ export function startIntro() {
 
   // Transition vers la galaxie
   function endIntro() {
-    intro.style.opacity = 0;
-    setTimeout(() => {
-      intro.remove();
-      startAnimation();
-      trackLabel();
-      document.getElementById("planet-label").style.opacity = "1";
-    }, 1000);
+    const launchBtn = document.createElement("button");
+    launchBtn.textContent = "Lancer l'exploration";
+    launchBtn.classList.add("launch-button");
+    intro.appendChild(launchBtn);
+
+    launchBtn.onclick = () => {
+      intro.style.opacity = 0;
+      setTimeout(() => {
+        intro.remove();
+        startAnimation();
+        trackLabel();
+        document.getElementById("planet-label").style.opacity = "1";
+      }, 1000);
+    };
   }
 
   // Lancer l’intro
