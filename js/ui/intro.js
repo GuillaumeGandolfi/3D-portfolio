@@ -10,28 +10,30 @@ export function startIntro() {
   intro.innerHTML = `<p id="intro-text"></p>`;
   document.body.appendChild(intro);
 
-  // Lignes avec texte et nombre de points progressifs
   const lines = [
-    "SYSTÈME EN RÉVEIL...",
+    "[DÉMARRAGE DU TERMINAL SPATIAL]",
     "",
-    ">>> Lancement des modules sensoriels...",
-    ">>> Fréquences cérébrales détectées...",
+    "Connexion établie avec le vaisseau personnel de Guillaume Gandolfi...",
     "",
-    "VOUS.",
-    "Vous êtes là.",
-    "Un visiteur isolé dans le vide numérique.",
+    "Chargement de l'environnement galactique...",
     "",
-    "Chargement du dossier GUILL-AUME...",
+    "Systèmes en ligne : OK",
     "",
-    "« Ancien chercheur en biologie marine. Navigateur des données. Alchimiste du web. »",
+    "Bienvenue à bord, explorateur !",
     "",
-    ">>> Initialisation de l’interface de présentation...",
-    ">>> Vérification des liens projet...",
-    ">>> ERREUR : instabilité détectée...",
+    "Ce portfolio est une expérience interactive,",
+    "développée entièrement avec Three.js.",
     "",
-    "⚠️  Éjection imminente",
+    "Entre animations 3D, narration et projets concrets,",
+    "je t’invite à naviguer dans mon univers de développeur web.",
     "",
-    "Bienvenue dans l’espace personnel de Guillaume.",
+    "Installe-toi confortablement.",
+    "",
+    "L'aventure ne fait que commencer...",
+    "",
+    "Préparation du voyage intersidéral...",
+    "",
+    "Destination : Galaxie des projets",
   ];
 
   const textEl = document.getElementById("intro-text");
@@ -77,12 +79,18 @@ export function startIntro() {
       const line = lines[i];
       const lineElement = document.createElement("div");
 
-      textEl.appendChild(lineElement);
-
-      typeWriter(lineElement, line, () => {
+      if (line.trim() === "") {
+        lineElement.style.height = "14px";
+        textEl.appendChild(lineElement);
         i++;
-        setTimeout(nextLine, 300);
-      });
+        setTimeout(nextLine, 100);
+      } else {
+        textEl.appendChild(lineElement);
+        typeWriter(lineElement, line, () => {
+          i++;
+          setTimeout(nextLine, 300);
+        });
+      }
     } else {
       endIntro();
     }
