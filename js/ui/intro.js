@@ -17,7 +17,7 @@ export function startIntro() {
   createWireframeAsteroid();
 
   const lines = [
-    "[DÉMARRAGE DU TERMINAL SPATIAL]",
+    { text: "[DÉMARRAGE DU TERMINAL SPATIAL]", animatedDots: true },
     "",
     "Connexion établie avec le vaisseau personnel de Guillaume Gandolfi...",
     "",
@@ -34,19 +34,47 @@ export function startIntro() {
   const textEl = document.getElementById("intro-text");
   let i = 0;
 
+  function showLineWithDots(baseLine, dotCount, onComplete) {
+    let currentDots = 0;
+    const lineElement = document.createElement("div");
+    textEl.appendChild(lineElement);
+
+    function step() {
+      lineElement.textContent = baseLine + ".".repeat(currentDots);
+      textEl.scrollTop = textEl.scrollHeight;
+
+      currentDots++;
+
+      if (currentDots <= dotCount) {
+        setTimeout(step, 1000);
+      } else {
+        onComplete();
+      }
+    }
+
+    step();
+  }
+
   function nextLine() {
     if (i < lines.length) {
-      const line = lines[i];
-      const lineElement = document.createElement("div");
+      const current = lines[i];
+      let lineText = typeof current === "string" ? current : current.text;
+      let lineElement = document.createElement("div");
 
-      if (line.trim() === "") {
+      if (lineText.trim() === "") {
         lineElement.style.height = "14px";
         textEl.appendChild(lineElement);
         i++;
         setTimeout(nextLine, 100);
+      } else if (typeof current === "object" && current.animatedDots) {
+        textEl.appendChild(lineElement);
+        showLineWithDots(lineText, 3, () => {
+          i++;
+          setTimeout(nextLine, 300);
+        });
       } else {
         textEl.appendChild(lineElement);
-        typeWriter(lineElement, line, () => {
+        typeWriter(lineElement, lineText, () => {
           i++;
           setTimeout(nextLine, 300);
         });
