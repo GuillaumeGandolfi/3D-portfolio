@@ -4,19 +4,21 @@ import { typeWriter } from "./typewriter.js";
 import * as THREE from "three";
 
 export function startIntro() {
+  // Création du conteneur principal de l'introduction
   const intro = document.createElement("div");
   intro.classList.add("intro-hud");
   intro.innerHTML = `
-  <div class="intro-shape-container">
-    <canvas id="intro-canvas"></canvas>
-  </div>
-  <p id="intro-text"></p>
-`;
-
+    <div class="intro-shape-container">
+      <canvas id="intro-canvas"></canvas>
+    </div>
+    <p id="intro-text"></p>
+  `;
   document.body.appendChild(intro);
 
-  createWireframeCrystal();
+  // Initialisation de la scène Three.js pour l'astéroïde
+  initAsteroid();
 
+  // Texte de l'introduction
   const lines = [
     "[DÉMARRAGE DU TERMINAL SPATIAL]",
     "",
@@ -35,6 +37,7 @@ export function startIntro() {
   const textEl = document.getElementById("intro-text");
   let i = 0;
 
+  // Fonction pour afficher chaque ligne de texte avec un effet machine à écrire
   function nextLine() {
     if (i < lines.length) {
       const line = lines[i];
@@ -57,6 +60,7 @@ export function startIntro() {
     }
   }
 
+  // Fonction appelée à la fin de l'introduction
   function endIntro() {
     const launchBtn = document.createElement("button");
     launchBtn.textContent = "Lancer l'exploration";
@@ -74,30 +78,39 @@ export function startIntro() {
     };
   }
 
+  // Démarrage de l'affichage du texte
   nextLine();
 }
 
-function createWireframeCrystal() {
+// Fonction pour initialiser et animer l'astéroïde low-poly
+function initAsteroid() {
   const canvas = document.getElementById("intro-canvas");
   const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
-  renderer.setSize(120, 120);
+  renderer.setSize(150, 150);
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 10);
   camera.position.z = 3;
 
-  // Forme d'octaèdre = effet gemme/rubis
-  const geometry = new THREE.OctahedronGeometry(1);
-  const wireframe = new THREE.WireframeGeometry(geometry);
-  const material = new THREE.LineBasicMaterial({ color: 0x00ff00 });
-  const crystal = new THREE.LineSegments(wireframe, material);
+  // Création de la géométrie de l'astéroïde
+  const geometry = new THREE.IcosahedronGeometry(1, 0); // Icosaèdre pour un effet low-poly
+  const material = new THREE.MeshStandardMaterial({
+    color: 0x888888,
+    flatShading: true,
+  });
+  const asteroid = new THREE.Mesh(geometry, material);
+  scene.add(asteroid);
 
-  scene.add(crystal);
+  // Ajout d'une lumière directionnelle
+  const light = new THREE.DirectionalLight(0xffffff, 1);
+  light.position.set(5, 5, 5);
+  scene.add(light);
 
+  // Fonction d'animation
   function animate() {
     requestAnimationFrame(animate);
-    crystal.rotation.x += 0.01;
-    crystal.rotation.y += 0.015;
+    asteroid.rotation.x += 0.01;
+    asteroid.rotation.y += 0.015;
     renderer.render(scene, camera);
   }
 
