@@ -1,79 +1,40 @@
 import { startAnimation } from "../core/loop.js";
 import { trackLabel } from "../core/interactions.js";
 import { typeWriter } from "./typewriter.js";
+import * as THREE from "three";
 
 export function startIntro() {
-  // Création du conteneur HUD
   const intro = document.createElement("div");
   intro.classList.add("intro-hud");
+  intro.innerHTML = `
+  <div class="intro-shape-container">
+    <canvas id="intro-canvas"></canvas>
+  </div>
+  <p id="intro-text"></p>
+`;
 
-  intro.innerHTML = `<p id="intro-text"></p>`;
   document.body.appendChild(intro);
+
+  createWireframeCrystal();
 
   const lines = [
     "[DÉMARRAGE DU TERMINAL SPATIAL]",
     "",
     "Connexion établie avec le vaisseau personnel de Guillaume Gandolfi...",
     "",
-    "Chargement de l'environnement galactique...",
-    "",
-    "Systèmes en ligne : OK",
-    "",
     "Bienvenue à bord, explorateur !",
     "",
     "Ce portfolio est une expérience interactive,",
     "développée entièrement avec Three.js.",
     "",
-    "Entre animations 3D, narration et projets concrets,",
-    "je t’invite à naviguer dans mon univers de développeur web.",
-    "",
     "Installe-toi confortablement.",
     "",
     "L'aventure ne fait que commencer...",
-    "",
-    "Préparation du voyage intersidéral...",
-    "",
-    "Destination : Galaxie des projets",
   ];
 
   const textEl = document.getElementById("intro-text");
   let i = 0;
 
-  // Fonction pour afficher une ligne avec points animés
-  function showLineWithDots(line, dotCount, onComplete) {
-    let currentDots = 0;
-    let baseLine = line;
-
-    // On garde tout l'historique
-    const linesSoFar = textEl.textContent;
-
-    function step() {
-      const tempLine = baseLine + ".".repeat(currentDots);
-      textEl.textContent = linesSoFar + "\n" + tempLine;
-      textEl.scrollTop = textEl.scrollHeight;
-
-      currentDots++;
-
-      if (currentDots <= dotCount) {
-        setTimeout(step, 150);
-      } else {
-        // Ajoute définitivement la ligne terminée
-        textEl.textContent =
-          linesSoFar + "\n" + baseLine + ".".repeat(dotCount) + "\n";
-        textEl.scrollTop = textEl.scrollHeight;
-        onComplete();
-      }
-    }
-
-    step();
-  }
-
-  function showTypedLine(line, onComplete) {
-    const previous = textEl.textContent;
-    typeWriter(textEl, previous + "\n" + line, onComplete);
-  }
-
-  // Enchaîner les lignes une par une
   function nextLine() {
     if (i < lines.length) {
       const line = lines[i];
@@ -96,7 +57,6 @@ export function startIntro() {
     }
   }
 
-  // Transition vers la galaxie
   function endIntro() {
     const launchBtn = document.createElement("button");
     launchBtn.textContent = "Lancer l'exploration";
@@ -114,6 +74,32 @@ export function startIntro() {
     };
   }
 
-  // Lancer l’intro
   nextLine();
+}
+
+function createWireframeCrystal() {
+  const canvas = document.getElementById("intro-canvas");
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
+  renderer.setSize(120, 120);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 10);
+  camera.position.z = 3;
+
+  // Forme d'octaèdre = effet gemme/rubis
+  const geometry = new THREE.OctahedronGeometry(1);
+  const wireframe = new THREE.WireframeGeometry(geometry);
+  const material = new THREE.LineBasicMaterial({ color: 0x00ff00 });
+  const crystal = new THREE.LineSegments(wireframe, material);
+
+  scene.add(crystal);
+
+  function animate() {
+    requestAnimationFrame(animate);
+    crystal.rotation.x += 0.01;
+    crystal.rotation.y += 0.015;
+    renderer.render(scene, camera);
+  }
+
+  animate();
 }
