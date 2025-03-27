@@ -8,8 +8,14 @@ html {
   font-family: "Roboto", sans-serif;
 }
 
+/* === INTRO === */
 .intro-hud {
   position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: left;
+  flex-direction: column;
   top: 0;
   left: 0;
   width: 100%;
@@ -23,6 +29,23 @@ html {
   z-index: 10;
   opacity: 1;
   transition: opacity 1s ease-out;
+  overflow: hidden;
+}
+
+#intro-text {
+  width: 800px;
+  height: 300px;
+  line-height: 1.2;
+  text-align: justify;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  padding-right: 10px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+#intro-text::-webkit-scrollbar {
+  display: none;
 }
 
 /* === TERMINAL === */
