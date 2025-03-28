@@ -97,7 +97,7 @@ export function startIntro() {
         startAnimation();
         trackLabel();
         document.getElementById("planet-label").style.opacity = "1";
-      }, 1000);
+      }, 300);
     };
   }
 
